@@ -29,6 +29,15 @@ class TodoListState extends State<TodoList> {
   }
 
   Widget _buildTodoList() {
+    return new ListView.builder(itemBuilder: (context, index) {
+      if (index < _todoItems.length) {
+        return _buildTodoItem(_todoItems[index]);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Todo List'),
@@ -40,10 +49,5 @@ class TodoListState extends State<TodoList> {
         child: new Icon(Icons.add),
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(appBar: new AppBar(title: new Text('Todo List')));
   }
 }

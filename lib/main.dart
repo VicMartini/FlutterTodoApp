@@ -17,11 +17,32 @@ class TodoList extends StatefulWidget {
 class TodoListState extends State<TodoList> {
   List<String> _todoItems = [];
 
-  void _addTodoItem() {
+  void _addTodoItem(String text) {
     setState(() {
       int index = _todoItems.length;
-      _todoItems.add('Items' + index.toString());
+      if (text.length > 1) {
+        _todoItems.add(text);
+      }
     });
+  }
+
+  void _pushAddTodoScreen() {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return Scaffold(
+        appBar: new AppBar(
+          title: new Text('Add new task'),
+        ),
+        body: new TextField(
+            autofocus: true,
+            onSubmitted: (value) {
+              _addTodoItem(value);
+              Navigator.pop(context);
+            },
+            decoration: new InputDecoration(
+                hintText: 'Enter a title for the task...',
+                contentPadding: const EdgeInsets.all(16.0))),
+      );
+    }));
   }
 
   Widget _buildTodoItem(String todoText) {
@@ -44,7 +65,7 @@ class TodoListState extends State<TodoList> {
       ),
       body: _buildTodoList(),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _addTodoItem,
+        onPressed: _pushAddTodoScreen,
         tooltip: 'Add task',
         child: new Icon(Icons.add),
       ),

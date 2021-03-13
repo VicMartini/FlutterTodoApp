@@ -17,6 +17,33 @@ class TodoList extends StatefulWidget {
 class TodoListState extends State<TodoList> {
   List<String> _todoItems = [];
 
+  void _removeTodoItem(int index) {
+    setState(() {
+      _todoItems.removeAt(index);
+    });
+  }
+
+  void _promptRemoveTodoItem(int index) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: new Text('Mark "${_todoItems[index]}" as done?'),
+            actions: <Widget>[
+              new TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: new Text('Cancel')),
+              new TextButton(
+                  onPressed: () {
+                    _removeTodoItem(index);
+                    Navigator.of(context).pop();
+                  },
+                  child: new Text('Mark as done'))
+            ],
+          );
+        });
+  }
+
   void _addTodoItem(String text) {
     setState(() {
       int index = _todoItems.length;
@@ -45,14 +72,17 @@ class TodoListState extends State<TodoList> {
     }));
   }
 
-  Widget _buildTodoItem(String todoText) {
-    return new ListTile(title: new Text(todoText));
+  Widget _buildTodoItem(String todoText, int index) {
+    return new ListTile(
+      title: new Text(todoText),
+      onTap: () => _promptRemoveTodoItem(index),
+    );
   }
 
   Widget _buildTodoList() {
     return new ListView.builder(itemBuilder: (context, index) {
       if (index < _todoItems.length) {
-        return _buildTodoItem(_todoItems[index]);
+        return _buildTodoItem(_todoItems[index], index);
       }
     });
   }
